@@ -1,18 +1,32 @@
 #pragma once
-#include<glad/glad.h>
-#include<glfw3.h>
-#define STARTUP_MONITOR_2 true
+#ifndef MINECRAFT_CLONE
+#define MINECRAFT_CLONE
+#include "core.h"
+#include <iterator>
+#include "./utils/arrays.h"
+#define STARTUP_MONITOR 2
+#define STARTUP_FULLSCREEN false
+#define MAX_WINDOWS 5
 
-struct Window {
+class Window {
 	public:
-		static const int windowWidth = 1280;
-		static const int windowHeight = 720;
-		static const char* windowTitle;
+		GLFWwindow* nativeWindow;
+		int windowWidth;
+		int windowHeight;
+		const char* windowTitle;
+		int windowMonitor;
 		
-		static void fullScreen(GLFWwindow* window);
-		static bool isFullScreen(GLFWwindow* window);
-		static void setWindowScreen(GLFWwindow* window);
+		static Window* createWindow(const char* title, int width, int height);
+		static Window* getWindow(GLFWwindow* windowIn);
+		static int  getWindow(Window* windowIn);
+		static void addWindow(Window* window);
+		static void removeWindow(GLFWwindow* windowIn);
+		void fullScreen();
+		bool isFullScreen(Window* window);
+		void setWindowScreen(int screen);
+		void getWindowMonitor();
 	private:
-		 static int screenPosX, screenPosY, screenWidth, screenHeight;
+		int windowPosX, windowPosY;
+		static Window* activeWindows[MAX_WINDOWS];
 };
-
+#endif
