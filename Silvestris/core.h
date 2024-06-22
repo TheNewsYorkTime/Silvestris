@@ -20,3 +20,5 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/quaternion.hpp>
+
+#include "resource.h"

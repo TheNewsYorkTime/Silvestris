@@ -17,7 +17,7 @@ int main() {
 
 	monitorsSetup();
 
-	Window* mainWindow = Window::createWindow("Minecraft Clone", 1280, 720);
+	Window* mainWindow = Window::createWindow("Silvestris", 1280, 720);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		printf("GLAD failed to initialize, exiting...\n");

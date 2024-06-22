@@ -7,7 +7,7 @@ layout (location = 1) in vec4 aColor;
 out vec4 fColor;
 void main()
 {
-    fColor = aColor;
+    fColor = aColor * vec4(aPosition, 1.0);
     gl_Position = vec4(aPosition, 1.0);
 })";
 

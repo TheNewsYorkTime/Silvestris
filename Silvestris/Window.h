@@ -1,6 +1,6 @@
 #pragma once
-#ifndef MINECRAFT_CLONE
-#define MINECRAFT_CLONE
+#ifndef SILVESTRIS
+#define SILVESTRIS
 #include "core.h"
 #include <iterator>
 #include "./utils/arrays.h"

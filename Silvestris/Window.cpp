@@ -2,6 +2,8 @@
 #include "Input.h"
 #include "Monitor.h"
 
+
+// TODO: Refactor with Window User Pointer
 Window* Window::activeWindows[MAX_WINDOWS] = {nullptr};
 
 void handle_glfw_error(int error, const char* description) {
@@ -34,7 +36,7 @@ int applyCallbacks(GLFWwindow* window) {
 Window* Window::createWindow(const char* title, int width, int height)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	Window* createdWindow = new Window();
@@ -103,18 +105,20 @@ void Window::fullScreen() {
 	else {
 		glfwGetWindowPos(this->nativeWindow, &this->windowPosX, &this->windowPosY);
 		this->getWindowMonitor();
+		
 		printf("Setting to Monitor: %d\n", this->windowMonitor);
 		int xpos, ypos, width, height;
 		glfwGetMonitorWorkarea(monitors[this->windowMonitor].nativeMonitor, &xpos, &ypos, &width, &height);
+		printf("Monitor: %d, Inner Bound (%d, %d), Outer Bound (%d, %d), actual position: (%d, %d)\n", this->windowMonitor, xpos, ypos, xpos + width, ypos + height, this->windowPosX, this->windowPosY);
 		glfwSetWindowMonitor(this->nativeWindow, monitors[this->windowMonitor].nativeMonitor, xpos, ypos, width, height, GLFW_DONT_CARE);
 	}
 }
 
 void Window::getWindowMonitor() {
 	glfwGetWindowPos(this->nativeWindow, &this->windowPosX, &this->windowPosY);
-	for (int i = 0; i < 10; i++) {
-		if (this->windowPosX >=  monitors[i].xpos && this->windowPosX <= monitors[i].xsize  - (this->windowWidth / 2) 
-			&& this->windowPosY >= monitors[i].ypos && this->windowPosY <= monitors[i].ysize) {
+	for (int i = 0; i < MAX_MONITORS; i++) {
+		if ( this->windowPosX >=  monitors[i].xpos && this->windowPosX <= monitors[i].xpos + monitors[i].xsize  - (this->windowWidth / 3)
+			&& this->windowPosY >= monitors[i].ypos && this->windowPosY <= monitors[i].ysize + monitors[i].ypos - (this->windowWidth / 3) ) {
 
 				this->windowMonitor = i;
 				return;

@@ -2,7 +2,7 @@
 #include "core.h"
 #define MAX_MONITORS 10
 
-typedef struct Monitor {
+struct Monitor {
 	int xpos;
 	int ypos;
 	int xsize;
