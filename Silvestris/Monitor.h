@@ -1,6 +1,5 @@
 #pragma once
 #include "core.h"
-#define MAX_MONITORS 10
 
 struct Monitor {
 	int xpos;
@@ -13,4 +12,4 @@ struct Monitor {
 void monitorsSetup();
 void onMonitorsChange(GLFWmonitor* monitor, int event);
 
-extern Monitor monitors[MAX_MONITORS];
+extern std::vector <Monitor> monitors;

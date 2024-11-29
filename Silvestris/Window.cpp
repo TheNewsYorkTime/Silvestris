@@ -1,10 +1,10 @@
 #include "Window.h"
 #include "Input.h"
-#include "Monitor.h"
+
 
 
 // TODO: Refactor with Window User Pointer
-Window* Window::activeWindows[MAX_WINDOWS] = {nullptr};
+std::vector <Window*> Window::activeWindows;
 
 void handle_glfw_error(int error, const char* description) {
 	fprintf(stderr, "GLFW had an error: %s\n", description);
@@ -24,7 +24,7 @@ void onWindowSizeChange(GLFWwindow* window, int width, int height) {
 void monitorAfterMove(GLFWwindow* window, int posX, int posY) {
 	Window* movedWindow = Window::getWindow(window);
 	movedWindow->getWindowMonitor();
-	glfwSetWindowSizeLimits(movedWindow->nativeWindow, NULL, NULL, monitors[movedWindow->windowMonitor].xsize, monitors[movedWindow->windowMonitor].ysize);
+	glfwSetWindowSizeLimits(movedWindow->nativeWindow, NULL, NULL, movedWindow->windowMonitor->xsize, movedWindow->windowMonitor->ysize);
 }
 
 int applyCallbacks(GLFWwindow* window) {
@@ -60,54 +60,39 @@ Window* Window::createWindow(const char* title, int width, int height)
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	Window::addWindow(createdWindow);
+	Window::activeWindows.push_back(createdWindow);
 	applyCallbacks(createdWindow->nativeWindow) == 0 ? printf("Callbacks attatched\n") : fprintf(stderr, "Callbacks not attached\n");
 
-	
-	
+
+
 	createdWindow->windowWidth = width;
 	createdWindow->windowHeight = height;
 
 	createdWindow->setWindowScreen(STARTUP_MONITOR);
-	
+
 
 	if (STARTUP_FULLSCREEN)
 	{
 		createdWindow->fullScreen();
 	}
 	glfwMakeContextCurrent(createdWindow->nativeWindow);
-	
+
 	return createdWindow;
 }
 Window* Window::getWindow(GLFWwindow* windowIn) {
 	Window* retWindow = nullptr;
-	for (int i = 0; i < MAX_WINDOWS; i++) {
-		if (Window::activeWindows[i]->nativeWindow == windowIn) {
-			return retWindow = Window::activeWindows[i];
+	for (auto window : Window::activeWindows) {
+		if (window->nativeWindow == windowIn) {
+			return retWindow = window;
 		}
 	}
 	return nullptr;
 }
-int Window::getWindow(Window* windowIn) {
-	int index;
-	for (int i = 0; i < MAX_WINDOWS; i++) {
-		if (Window::activeWindows[i] == windowIn) {
-			index = i;
-		}
-	}
-	return index;
-}
-void Window::addWindow(Window* window) {
-	for (int i = 0; i < MAX_WINDOWS; i++) {
-		if (Window::activeWindows[i] == nullptr) {
-			Window::activeWindows[i] = window;
-			return;
-		}
-	}
-}
+
 void Window::removeWindow(GLFWwindow* windowIn) {
-	int windowIndex = getWindow(getWindow(windowIn));
-	popItem(Window::activeWindows, sizeof(Window *), windowIndex, sizeof(Window::activeWindows));
+	auto windowWindowToFind = Window::getWindow(windowIn);
+	auto windowIndex = std::find(Window::activeWindows.begin(), Window::activeWindows.end(), windowWindowToFind);
+	Window::activeWindows.erase(windowIndex);
 }
 void Window::fullScreen() {
 	if (this->isFullScreen()) {
@@ -116,22 +101,22 @@ void Window::fullScreen() {
 	else {
 		glfwGetWindowPos(this->nativeWindow, &this->windowPosX, &this->windowPosY);
 		this->getWindowMonitor();
-		
-		printf("Setting to Monitor: %d\n", this->windowMonitor);
+
+		printf("Setting to Monitor: %s\n", glfwGetMonitorName(this->windowMonitor->nativeMonitor));
 		int xpos, ypos, width, height;
-		glfwGetMonitorWorkarea(monitors[this->windowMonitor].nativeMonitor, &xpos, &ypos, &width, &height);
-		printf("Monitor: %d, Inner Bound (%d, %d), Outer Bound (%d, %d), actual position: (%d, %d)\n", this->windowMonitor, xpos, ypos, xpos + width, ypos + height, this->windowPosX, this->windowPosY);
-		glfwSetWindowMonitor(this->nativeWindow, monitors[this->windowMonitor].nativeMonitor, xpos, ypos, width, height, GLFW_DONT_CARE);
+		glfwGetMonitorWorkarea(this->windowMonitor->nativeMonitor, &xpos, &ypos, &width, &height);
+		printf("Monitor: %s, Inner Bound (%d, %d), Outer Bound (%d, %d), actual position: (%d, %d)\n", glfwGetMonitorName(this->windowMonitor->nativeMonitor), xpos, ypos, xpos + width, ypos + height, this->windowPosX, this->windowPosY);
+		glfwSetWindowMonitor(this->nativeWindow, this->windowMonitor->nativeMonitor, xpos, ypos, width, height, GLFW_DONT_CARE);
 	}
 }
 
 void Window::getWindowMonitor() {
 	glfwGetWindowPos(this->nativeWindow, &this->windowPosX, &this->windowPosY);
-	for (int i = 0; i < MAX_MONITORS; i++) {
-		if ( this->windowPosX >=  monitors[i].xpos && this->windowPosX <= monitors[i].xpos + monitors[i].xsize  - (this->windowWidth / 3)
-			&& this->windowPosY >= monitors[i].ypos && this->windowPosY <= monitors[i].ysize + monitors[i].ypos - (this->windowWidth / 3) ) {
+	for (auto monitor : monitors) {
+		if ( this->windowPosX >=  monitor.xpos && this->windowPosX <= monitor.xpos + monitor.xsize  - (this->windowWidth / 3)
+			&& this->windowPosY >= monitor.ypos && this->windowPosY <= monitor.ysize + monitor.ypos - (this->windowWidth / 3) ) {
 
-				this->windowMonitor = i;
+				this->windowMonitor = &monitor;
 				return;
 			}
 	}
@@ -147,6 +132,6 @@ void Window::setWindowScreen(int screen) {
 		fprintf(stderr, "Can't set window to screen %d. No such screen\n", screen);
 		return;
 	}
-	this->windowMonitor = screen - 1;
+	this->windowMonitor = &monitors[screen - 1];
 	glfwSetWindowPos(this->nativeWindow, monitors[screen - 1].xpos + monitors[screen - 1].xsize / 2 - windowWidth / 2, monitors[screen - 1].ypos + monitors[screen - 1].ysize / 2 - windowHeight / 2);
 }

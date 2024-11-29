@@ -2,13 +2,13 @@
 #include "core.h"
 #include "Window.h"
 
-struct Vertex
-{
+struct Vertex {
 	glm::vec3 position;
 	glm::vec4 color;
+	Vertex* adjacent;
 };
 class RenderManager {
-	public: 
+	public:
 		static uint32_t myVAOId;
 		static uint32_t myVBOId;
 		static int worldX;

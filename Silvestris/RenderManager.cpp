@@ -15,11 +15,11 @@ void RenderManager::uploadVerticesAndStuff() {
 		{glm::vec3(0.5f, -0.5f, 0.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f)}
 	};
 
-	
+
 	glGenVertexArrays(1, &myVAOId);
 	glBindVertexArray(myVAOId);
 
-	
+
 	glGenBuffers(1, &myVBOId);
 	glBindBuffer(GL_ARRAY_BUFFER, myVBOId);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(squareVertexArray), squareVertexArray, GL_STATIC_DRAW);
