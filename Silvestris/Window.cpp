@@ -21,6 +21,12 @@ void onWindowSizeChange(GLFWwindow* window, int width, int height) {
 	actingWindow->windowHeight = height;
 }
 
+void monitorAfterMove(GLFWwindow* window, int posX, int posY) {
+	Window* movedWindow = Window::getWindow(window);
+	movedWindow->getWindowMonitor();
+	glfwSetWindowSizeLimits(movedWindow->nativeWindow, NULL, NULL, monitors[movedWindow->windowMonitor].xsize, monitors[movedWindow->windowMonitor].ysize);
+}
+
 int applyCallbacks(GLFWwindow* window) {
 	GLFWerrorfun error = glfwSetErrorCallback(handle_glfw_error);
 	GLFWmonitorfun monitor = glfwSetMonitorCallback(onMonitorsChange);
@@ -30,6 +36,7 @@ int applyCallbacks(GLFWwindow* window) {
 	GLFWcursorposfun cursor = glfwSetCursorPosCallback(window, Input::onMouseMove);
 	GLFWscrollfun scroll = glfwSetScrollCallback(window, Input::onMouseScroll);
 	GLFWmousebuttonfun mouse = glfwSetMouseButtonCallback(window, Input::onMouseButton);
+	GLFWwindowposfun pos = glfwSetWindowPosCallback(window, monitorAfterMove);
 	return 0;
 }
 
@@ -55,10 +62,14 @@ Window* Window::createWindow(const char* title, int width, int height)
 	}
 	Window::addWindow(createdWindow);
 	applyCallbacks(createdWindow->nativeWindow) == 0 ? printf("Callbacks attatched\n") : fprintf(stderr, "Callbacks not attached\n");
+
+	
+	
 	createdWindow->windowWidth = width;
 	createdWindow->windowHeight = height;
 
 	createdWindow->setWindowScreen(STARTUP_MONITOR);
+	
 
 	if (STARTUP_FULLSCREEN)
 	{
@@ -99,8 +110,8 @@ void Window::removeWindow(GLFWwindow* windowIn) {
 	popItem(Window::activeWindows, sizeof(Window *), windowIndex, sizeof(Window::activeWindows));
 }
 void Window::fullScreen() {
-	if (isFullScreen(this)) {
-		glfwSetWindowMonitor(this->nativeWindow, nullptr, this->windowPosX, this->windowPosY, 1280, 720, GLFW_DONT_CARE);
+	if (this->isFullScreen()) {
+		glfwSetWindowMonitor(this->nativeWindow, nullptr, this->windowPosX, this->windowPosY, windowHeight, windowWidth, GLFW_DONT_CARE);
 	}
 	else {
 		glfwGetWindowPos(this->nativeWindow, &this->windowPosX, &this->windowPosY);
@@ -127,10 +138,11 @@ void Window::getWindowMonitor() {
 	return;
 }
 
-bool Window::isFullScreen(Window* window) {
-	return glfwGetWindowMonitor(window->nativeWindow) != nullptr;
+bool Window::isFullScreen() {
+	return glfwGetWindowMonitor(this->nativeWindow) != nullptr;
 }
 void Window::setWindowScreen(int screen) {
+
 	if (monitors[screen - 1].nativeMonitor == 0) {
 		fprintf(stderr, "Can't set window to screen %d. No such screen\n", screen);
 		return;

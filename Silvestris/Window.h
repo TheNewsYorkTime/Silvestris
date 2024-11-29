@@ -22,7 +22,7 @@ class Window {
 		static void addWindow(Window* window);
 		static void removeWindow(GLFWwindow* windowIn);
 		void fullScreen();
-		bool isFullScreen(Window* window);
+		bool isFullScreen();
 		void setWindowScreen(int screen);
 		void getWindowMonitor();
 	private:

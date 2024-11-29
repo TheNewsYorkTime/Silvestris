@@ -59,7 +59,7 @@ bool Input::checkMouseButtonDown(int button)
 
 void Input::inputs(Window* window)
 {
-	if (Input::checkKeyDown(GLFW_KEY_F11)) {
+	if (Input::checkKeyDown(GLFW_KEY_F11) || (Input::checkKeyDown(GLFW_KEY_ESCAPE) && window->isFullScreen())) {
 		window->fullScreen();
 	}
 	keysPressed[GLFW_KEY_F11] = {};

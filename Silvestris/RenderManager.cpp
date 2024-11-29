@@ -2,6 +2,7 @@
 
 uint32_t RenderManager::myVAOId = NULL;
 uint32_t RenderManager::myVBOId = NULL;
+int RenderManager::worldX, RenderManager::worldY = 0;
 
 void RenderManager::uploadVerticesAndStuff() {
 	Vertex squareVertexArray[6] = {
@@ -40,4 +41,10 @@ void RenderManager::framebufferCallback(GLFWwindow* window, int width, int heigh
 	glViewport(0, 0, width, height);
 	Window* renderWindow = Window::getWindow(window);
 	RenderManager::drawStuff(renderWindow);
+}
+void RenderManager::setWorldSpace(int x, int y, Window* window) {
+	worldX = x;
+	RenderManager::worldY = y;
+	glfwSetWindowAspectRatio(window->nativeWindow, x, y);
+
 }

@@ -31,6 +31,7 @@ int main() {
 	glfwSetFramebufferSizeCallback(mainWindow->nativeWindow, RenderManager::framebufferCallback);
 	RenderManager::uploadVerticesAndStuff();
 	shader.bind();
+	RenderManager::setWorldSpace(400, 400, mainWindow);
 
 	//main loop
 	while (!glfwWindowShouldClose(mainWindow->nativeWindow)) {
