@@ -10,13 +10,10 @@ class Input {
 		static bool checkMouseButtonDown(int button);
 		static void inputs(Window* window);
 
-		
 
 	private:
 		static int keysPressed[GLFW_KEY_LAST];
 		static bool mouseButtonData[GLFW_MOUSE_BUTTON_LAST];
-		static double mouseX;
-		static double mouseY;
-		static float mouseScrollX;
-		static float mouseScrollY;
+		static ash::vec2 <double> mouse;
+		static ash::vec2 <float> mouseScroll;
 };

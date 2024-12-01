@@ -1,12 +1,8 @@
 #pragma once
 #include "core.h"
 #include "Window.h"
+#include "Object.h"
 
-struct Vertex {
-	glm::vec3 position;
-	glm::vec4 color;
-	Vertex* adjacent;
-};
 class RenderManager {
 	public:
 		static uint32_t myVAOId;

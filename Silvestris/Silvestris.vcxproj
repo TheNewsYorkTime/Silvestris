@@ -163,7 +163,9 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="tests\Test.cpp" />
     <ClCompile Include="utils\arrays.cpp" />
+    <ClCompile Include="utils\utils.hpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -175,6 +177,7 @@
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="tests\Test.h" />
     <ClInclude Include="utils\arrays.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="core.h" />

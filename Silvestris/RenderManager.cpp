@@ -5,16 +5,13 @@ uint32_t RenderManager::myVBOId = NULL;
 int RenderManager::worldX, RenderManager::worldY = 0;
 
 void RenderManager::uploadVerticesAndStuff() {
-	Vertex squareVertexArray[6] = {
-		{glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f)},
-		{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec4(0.5f, 0.3f, 0.3f, 1.0f)},
-		{glm::vec3(0.5f, -0.5f, 0.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f)},
+	glm::vec3 verts[4] = {
+		glm::vec3(-0.5f, -0.5f, 0.0f),
+		glm::vec3(-0.5f, 0.5f, 0.0f),
+		glm::vec3(0.5f ,-0.5f, 0.0f),
+		glm::vec3(0.5f, 0.5f, 0.0f) };
 
-		{glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec4(0.5f, 0.3f, 0.3f, 1.0f)},
-		{glm::vec3(0.5f, 0.5f, 0.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f)},
-		{glm::vec3(0.5f, -0.5f, 0.0f), glm::vec4(0.3f, 0.3f, 0.3f, 1.0f)}
-	};
-
+	Object square = Object(verts, glm::vec4(0.5f, 0.3f, 0.3f, 1.0f), 4);
 
 	glGenVertexArrays(1, &myVAOId);
 	glBindVertexArray(myVAOId);
@@ -22,7 +19,7 @@ void RenderManager::uploadVerticesAndStuff() {
 
 	glGenBuffers(1, &myVBOId);
 	glBindBuffer(GL_ARRAY_BUFFER, myVBOId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(squareVertexArray), squareVertexArray, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(square.vertices), &square.vertices.at(0), GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 	glEnableVertexAttribArray(0);
@@ -31,7 +28,7 @@ void RenderManager::uploadVerticesAndStuff() {
 	glEnableVertexAttribArray(1);
 }
 void RenderManager::drawStuff(Window* window) {
-	glClearColor(250.0f / 255.0f, 119.0f / 255.0f, 10.0f / 255.0f, 1.0f);
+	glClearColor(100.0f / 255.0f, 237.0f / 255.0f, 223.0f / 255.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glBindVertexArray(myVAOId);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

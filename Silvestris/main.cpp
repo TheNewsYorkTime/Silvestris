@@ -17,7 +17,7 @@ int main() {
 
 	monitorsSetup();
 
-	Window* mainWindow = Window::createWindow("Silvestris", 1280, 720);
+	Window* mainWindow = new Window("Silvestris", 1280, 720);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		printf("GLAD failed to initialize, exiting...\n");
@@ -26,7 +26,7 @@ int main() {
 	}
 
 	shader.compile();
-	
+
 	glfwSwapInterval(1);
 	glfwSetFramebufferSizeCallback(mainWindow->nativeWindow, RenderManager::framebufferCallback);
 	RenderManager::uploadVerticesAndStuff();
@@ -35,10 +35,10 @@ int main() {
 
 	//main loop
 	while (!glfwWindowShouldClose(mainWindow->nativeWindow)) {
-		
+
 		glViewport(0, 0, mainWindow->windowWidth, mainWindow->windowHeight);
-		
-		
+
+
 		RenderManager::drawStuff(mainWindow);
 
 
@@ -46,7 +46,7 @@ int main() {
 
 		Input::inputs(mainWindow);
 	}
-	
+
 	glfwTerminate();
 	return 0;
 }

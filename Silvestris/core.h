@@ -24,3 +24,4 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include "resource.h"
+#include "utils/utils.hpp"

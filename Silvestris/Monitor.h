@@ -2,11 +2,11 @@
 #include "core.h"
 
 struct Monitor {
-	int xpos;
-	int ypos;
-	int xsize;
-	int ysize;
+	ash::vec2 <int> pos;
+	ash::vec2 <int> size;
 	GLFWmonitor* nativeMonitor;
+	int id;
+	bool connected;
 };
 
 void monitorsSetup();

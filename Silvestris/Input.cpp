@@ -3,10 +3,8 @@
 
 int Input::keysPressed[GLFW_KEY_LAST] = {};
 bool Input::mouseButtonData[GLFW_MOUSE_BUTTON_LAST] = {};
-double Input::mouseX = 0.0;
-double Input::mouseY = 0.0;
-float Input::mouseScrollX = 0.0f;
-float Input::mouseScrollY = 0.0f;
+ash::vec2 <double> Input::mouse = { 0.0, 0.0 };
+ash::vec2 <float> Input::mouseScroll = { 0.0f, 0.0f };
 
 void Input::onKey(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (key >= 0 && key < GLFW_KEY_LAST)
@@ -24,13 +22,13 @@ void Input::onMouseButton(GLFWwindow* window, int button, int action, int mods)
 ;
 
 void Input::onMouseScroll(GLFWwindow* window, double xoffset, double yoffset) {
-	mouseScrollX = (float)xoffset;
-	mouseScrollY = (float)xoffset;
+	mouseScroll.x = (float)xoffset;
+	mouseScroll.y = (float)xoffset;
 	printf("Scrolllll! Weee!\n");
 }
 void Input::onMouseMove(GLFWwindow* window, double xpos, double ypos) {
-	mouseX = xpos;
-	mouseY = ypos;
+	mouse.x = xpos;
+	mouse.y = ypos;
 	printf("Mouse is moving over the window at: %f, %f\n", xpos, ypos);
 };
 
@@ -59,8 +57,8 @@ bool Input::checkMouseButtonDown(int button)
 
 void Input::inputs(Window* window)
 {
-	if (Input::checkKeyDown(GLFW_KEY_F11) || (Input::checkKeyDown(GLFW_KEY_ESCAPE) && window->isFullScreen())) {
-		window->fullScreen();
+	if (Input::checkKeyDown(GLFW_KEY_F11) || (Input::checkKeyDown(GLFW_KEY_ESCAPE) && window->isFullscreen())) {
+		window->fullscreen();
 	}
 	keysPressed[GLFW_KEY_F11] = {};
 }
